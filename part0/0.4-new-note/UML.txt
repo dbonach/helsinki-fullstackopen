@@ -1,0 +1,34 @@
+title Activity 0.4: New note
+
+note over Browser:
+User type a new note on the input
+field and click on "save" button
+end note
+
+Browser->Helsink Server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+note over Helsink Server:
+Server push the new note from
+the post request to the variable
+notes on the server
+end note
+Helsink Server-->Browser: HTTP response, code 302, location: /exampleapp/notes
+Browser->Helsink Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+Helsink Server-->Browser: HTML-code
+Browser->Helsink Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+Helsink Server-->Browser: main.css
+Browser->Helsink Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+Helsink Server-->Browser: main.js
+
+note over Browser:
+browser starts executing js-code
+that requests JSON data from server 
+end note
+
+Browser->Helsink Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+Helsink Server-->Browser: [{content: "Hello", date: "2021-06-15T11:02:23.062Z"}, ...]
+
+note over Browser:
+browser executes the event handler
+that renders notes to display
+end note
+

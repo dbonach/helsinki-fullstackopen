@@ -1,0 +1,18 @@
+title Activity 0.6: New note
+
+note over Browser:
+User insert new note into
+input field and submit
+end note
+
+note over Browser:
+browser executes the event handler
+that:
+- Create a new note object
+- Push it to the notes array 
+- Execute redrawNotes
+- Execute sendToServer(note)
+end note
+
+Browser->Helsink Server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa, \n Payload: {content: "new_note", date: "..."}
+Helsink Server-->Browser: HTTP response, code 201, body: {"message":"note created"}

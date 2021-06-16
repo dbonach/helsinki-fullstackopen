@@ -1,0 +1,21 @@
+title Activity 0.5: Single page app
+
+Browser->Helsink Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+Helsink Server-->Browser: HTML-code
+Browser->Helsink Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+Helsink Server-->Browser: main.css
+Browser->Helsink Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+Helsink Server-->Browser: spa.js
+
+note over Browser:
+browser starts executing js-code
+that requests JSON data from server 
+end note
+
+Browser->Helsink Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+Helsink Server-->Browser: [{"content":"hi there","date":"2021-06-15T11:03:06.804Z"}, ...]
+
+note over Browser:
+browser executes the event handler
+that renders notes to display
+end note
