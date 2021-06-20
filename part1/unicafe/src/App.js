@@ -13,6 +13,9 @@ const Stats = (props) => {
       <p>Good: {props.clicks.good}</p>
       <p>Neutral: {props.clicks.neutral}</p>
       <p>Bad: {props.clicks.bad}</p>
+      <p>All: {props.clicks.total}</p>
+      <p>Average: {(props.clicks.good - props.clicks.bad) / props.clicks.total}</p>
+      <p>Positive: {100 * props.clicks.good / props.clicks.total} &#37;</p>
     </div>
   )
 }
@@ -21,13 +24,15 @@ const App = () => {
   const [clicks, setClicks] = useState({
     good: 0,
     neutral: 0,
-    bad: 0
+    bad: 0,
+    total: 0
   })
 
   const handleClick = (feedback) => {
     const handler = () => setClicks({
       ...clicks,
-      [feedback]: clicks[feedback] + 1
+      [feedback]: clicks[feedback] + 1,
+      total: clicks.total + 1
     });
     return handler
   }
