@@ -6,7 +6,7 @@ const Button = ({ text, onClick }) => {
   return <button onClick={onClick}>{text}</button>;
 }
 
-const Stats = (props) => {
+const Statistics = (props) => {
   return (
     <div className="stats">
       <h3>Statistics</h3>
@@ -45,7 +45,7 @@ const App = () => {
         <Button onClick={handleClick('neutral')} text="Neutral" />
         <Button onClick={handleClick('bad')} text="Bad" />
       </div>
-      <Stats clicks={clicks} />
+      <Statistics clicks={clicks} />
     </div>
   );
 }
