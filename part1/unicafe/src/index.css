@@ -26,3 +26,14 @@ code {
 .stats {
   margin-top: 4rem;
 }
+
+.wrapper {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.wrapper > h1 {
+  margin: 1rem auto 2rem auto;
+}

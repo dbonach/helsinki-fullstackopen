@@ -14,10 +14,14 @@ const Buttons = (props) => {
   )
 }
 
-const Statistic = (props) => <p>
-  {props.feedback}: {props.number}
-  {props.percent ? <>&#37;</> : ""}
-</p>;
+const Statistic = (props) => {
+  return (
+    <tr>
+      <td>{props.feedback}</td>
+      <td>{props.number}</td>
+    </tr>
+  )
+}
 
 const Statistics = (props) => {
   if (props.clicks.total === 0) {
@@ -32,19 +36,23 @@ const Statistics = (props) => {
   return (
     <div className="stats">
       <h3>Statistics</h3>
-      <Statistic feedback="Good" number={props.clicks.good} />
-      <Statistic feedback="Neutral" number={props.clicks.neutral} />
-      <Statistic feedback="Bad" number={props.clicks.bad} />
-      <Statistic feedback="Total" number={props.clicks.total} />
-      <Statistic feedback="Average" number={props.clicks.bad} />
-      <Statistic feedback="Bad" number={props.clicks.bad} />
-      <Statistic
-        feedback="Average"
-        number={(props.clicks.good - props.clicks.bad) / props.clicks.total} />
-      <Statistic
-        feedback="Positive"
-        number={100 * props.clicks.good / props.clicks.total}
-        percent={true} />
+      <table>
+        <tbody>
+          <Statistic feedback="Good" number={props.clicks.good} />
+          <Statistic feedback="Neutral" number={props.clicks.neutral} />
+          <Statistic feedback="Bad" number={props.clicks.bad} />
+          <Statistic feedback="Total" number={props.clicks.total} />
+          <Statistic feedback="Average" number={props.clicks.bad} />
+          <Statistic feedback="Bad" number={props.clicks.bad} />
+          <Statistic
+            feedback="Average"
+            number={(props.clicks.good - props.clicks.bad) / props.clicks.total} />
+          <Statistic
+            feedback="Positive"
+            number={100 * props.clicks.good / props.clicks.total}
+            percent={true} />
+        </tbody>
+      </table>
     </div>
   )
 }
@@ -67,7 +75,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className="wrapper">
       <Header />
       <Buttons
         texts={["Good", "Neutral", "Bad"]}
