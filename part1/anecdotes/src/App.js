@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Button = ({ onClick }) => <button onClick={onClick}>Next Anecdore</button>;
+const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 
 const App = () => {
   const anecdotes = [
@@ -13,14 +13,44 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blod tests when dianosing patients'
   ]
 
-  const [selected, setSelected] = useState(0)
+  const [selected, setSelected] = useState({
+    anecdote: 0,
+    points: [0, 0, 0, 0, 0, 0, 0]
+  })
+
+  const number = selected.anecdote;
+
+  const updatePoints = () => {
+    const points = [...selected.points]
+    points[number] += 1
+
+    setSelected({
+      ...selected,
+      points: points
+    })
+  }
+
+  const updateAnecdote = () => {
+    setSelected({
+      ...selected,
+      anecdote: Math.floor(Math.random() * anecdotes.length)
+    })
+  }
 
   return (
     <div>
-      <div>
-        {anecdotes[selected]}
+      <div className="buttons">
+        <Button text="Vote" onClick={updatePoints} />
+        <Button text="Next Anecdote" onClick={updateAnecdote} />
       </div>
-      <Button onClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))} />
+
+      <div className="votes">
+        Has {selected.points[number]} votes
+      </div>
+
+      <div>
+        {anecdotes[number]}
+      </div>
     </div>
   )
 }
