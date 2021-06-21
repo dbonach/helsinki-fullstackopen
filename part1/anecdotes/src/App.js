@@ -37,8 +37,16 @@ const App = () => {
     })
   }
 
+  const mostVoted = selected.points.reduce(function (a, b) { return a > b ? a : b; });
+  const mostVotedIndex = selected.points.indexOf(mostVoted)
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
+      <div className="anecdote">
+        {anecdotes[number]}
+      </div>
+
       <div className="buttons">
         <Button text="Vote" onClick={updatePoints} />
         <Button text="Next Anecdote" onClick={updateAnecdote} />
@@ -48,8 +56,12 @@ const App = () => {
         Has {selected.points[number]} votes
       </div>
 
-      <div>
-        {anecdotes[number]}
+      <div className="mostVoted">
+        <h1>Anecdote with most votes</h1>
+        <div className="anecdote">
+          {anecdotes[mostVotedIndex]}
+        </div>
+        Has {mostVoted} points.
       </div>
     </div>
   )

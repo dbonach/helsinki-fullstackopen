@@ -28,3 +28,11 @@ button:first-of-type {
 .votes {
   margin-bottom: 1rem;
 }
+
+.anecdote {
+  height: 80px;
+}
+
+.mostVoted {
+  margin-top: 4rem;
+}
