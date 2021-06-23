@@ -1,12 +1,8 @@
 import React from 'react'
 
-const Header = ({ courseName }) => {
-  return <h1>{courseName}</h1>;
-}
+const Header = ({ courseName }) => <h1>{courseName}</h1>;
 
-const Part = ({ part }) => {
-  return <p>{part.name} {part.exercises}</p>;
-}
+const Part = ({ part }) => <p>{part.name} {part.exercises}</p>;
 
 const Content = ({ parts }) => {
   return (
@@ -16,29 +12,25 @@ const Content = ({ parts }) => {
   )
 }
 
-// const Total = (props) => {
-//   console.log(props);
-//   return (
-//     <p>
-//       Number of exercises {
-//         props.parts[0].exercises
-//         + props.parts[1].exercises
-//         + props.parts[2].exercises
-//       }
-//     </p>
-//   );
-// }
+const Total = ({ parts }) => {
+  const exercises = parts.map(part => part.exercises)
+  const total = exercises.reduce((a, b) => a + b)
+  return (
+    <p style={{ fontWeight: 'bold' }}>
+      Number of exercises {total}
+    </p>
+  );
+}
 
 const Course = ({ course }) => {
   return (
     <div>
       <Header courseName={course.name} />
       <Content parts={course.parts} />
-      {/* <Total parts={course.parts} /> */}
+      <Total parts={course.parts} />
     </div>
   )
 }
-
 
 const App = () => {
   const course = {
@@ -59,6 +51,11 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id: 4
       }
     ]
   }
