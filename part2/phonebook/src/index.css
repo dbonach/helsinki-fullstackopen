@@ -16,10 +16,16 @@ code {
   padding: 1rem;
 }
 
+.wrapper {
+  max-width: 400px;
+}
+
+.search > label{
+  min-width: max-content;
+}
+
 .list > p {
-  display: flex;
   justify-content: space-between;
-  max-width: 300px;
   margin: 0;
 }
 
@@ -28,9 +34,7 @@ code {
 }
 
 .formInput {
-  display: flex;
   margin-bottom: .25rem;
-  max-width: 300px;
 }
 
 .formInput > input {
@@ -38,9 +42,14 @@ code {
 }
 
 label {
-  width: 80px;
+  padding-right: .5rem;
 }
 
 form {
   margin-bottom: 3rem;
+}
+
+.flexItem {
+  display: flex;
+  justify-content: space-between;
 }
