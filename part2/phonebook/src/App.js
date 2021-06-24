@@ -22,8 +22,8 @@ const App = () => {
   }
 
   const handleSearchChange = (event) => {
-    const filter = event.target.value
-    const filtered = persons.filter((person) => person.name.includes(filter))
+    const filter = event.target.value.toLowerCase()
+    const filtered = persons.filter((person) => person.name.toLowerCase().includes(filter))
 
     setFiltered(filtered)
   }
