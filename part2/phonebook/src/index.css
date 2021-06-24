@@ -19,3 +19,16 @@ code {
 .list > p {
   margin: 0;
 }
+
+.formInput {
+  display: flex;
+  margin-bottom: .25rem;
+}
+
+label {
+  width: 80px;
+}
+
+form {
+  margin-bottom: 3rem;
+}
