@@ -17,12 +17,24 @@ code {
 }
 
 .list > p {
+  display: flex;
+  justify-content: space-between;
+  max-width: 300px;
   margin: 0;
+}
+
+.list span:first-of-type {
+  padding-right: .5rem;
 }
 
 .formInput {
   display: flex;
   margin-bottom: .25rem;
+  max-width: 300px;
+}
+
+.formInput > input {
+  margin-left: auto;
 }
 
 label {
