@@ -18,9 +18,19 @@ code {
 
 .wrapper {
   max-width: 400px;
+  min-width: max-content;
+  margin: auto;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 8px 0 #aaa;
+  border-radius: 8px;
 }
 
-.search > label{
+.searchFilter {
+  margin-bottom: 2rem;
+}
+
+.searchFilter > label{
   min-width: max-content;
 }
 

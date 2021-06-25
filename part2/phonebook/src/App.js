@@ -1,5 +1,69 @@
 import React, { useState } from 'react'
 
+const Filter = (props) => {
+  return (
+    <div className="searchFilter flexItem">
+      <label htmlFor="search">Search for a name:</label>
+      <input
+        id="search"
+        value={props.newFilter}
+        onChange={props.handleSearchChange} />
+    </div>
+  )
+}
+
+const PersonForm = (props) => {
+  return (
+    <form onSubmit={props.addName}>
+      <div className="formInput flexItem">
+        <label htmlFor="name">name:</label>
+        <input
+          id="name"
+          value={props.newName}
+          onChange={props.handleNameChange} />
+      </div>
+      <div className="formInput flexItem">
+        <label htmlFor="">number:</label>
+        <input
+          id="number"
+          value={props.newNumber}
+          onChange={props.handleNumberChange} />
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  );
+}
+
+const Person = (props) => {
+  return (
+    <p className="flexItem">
+      <span>{props.person.name}</span>
+      <span>{props.person.number}</span>
+    </p>
+  )
+}
+
+const Persons = (props) => {
+  const filteredList = props.persons.filter(
+    (person) =>
+      person.name.toLowerCase()
+        .includes(props.newFilter.toLowerCase())
+  );
+
+  const personList = filteredList.map(
+    (person) => <Person key={person.name} person={person} />)
+
+  return (
+    <div className='list'>
+      {filteredList.length ? personList
+        : "There's no match for the query search"}
+    </div>
+  );
+}
+
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456' },
@@ -7,11 +71,12 @@ const App = () => {
     { name: 'Dan Abramov', number: '12-43-234345' },
     { name: 'Mary Poppendieck', number: '39-23-6423122' }
   ])
+
   const [newName, setNewName] = useState('')
 
   const [newNumber, setNewNumber] = useState('')
 
-  const [filtered, setFiltered] = useState(persons)
+  const [newFilter, setNewFilter] = useState('')
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -22,65 +87,59 @@ const App = () => {
   }
 
   const handleSearchChange = (event) => {
-    const filter = event.target.value.toLowerCase()
-    const filtered = persons.filter((person) => person.name.toLowerCase().includes(filter))
-
-    setFiltered(filtered)
+    setNewFilter(event.target.value)
   }
-
-  console.log(filtered);
 
   const addName = (event) => {
     event.preventDefault()
-    if (persons.map((person) => person.name).includes(newName)) {
+
+    if (!newName || !newNumber) {
+      alert("You need to provide name and number!")
+      return
+    }
+
+    if (
+      persons.map((person) => person.name.toLowerCase())
+        .includes(newName.toLowerCase())
+    ) {
       alert(`${newName} is already added to phonebook`)
     } else {
       const newPerson = { name: newName, number: newNumber }
       setPersons(persons.concat(newPerson))
     }
+
     setNewName('')
     setNewNumber('')
   }
 
-  const personList = filtered.map((person, i) => {
-    return (
-      <p className="flexItem" key={i}>
-        <span>{person.name}</span>
-        <span>{person.number}</span>
-      </p>
-    )
-  })
 
   return (
     <div className="wrapper">
+
       <h1>Phonebook</h1>
 
-      <div className="search flexItem">
-        <label htmlFor="search">Search for a name:</label>
-        <input id="search" onChange={handleSearchChange} />
-      </div>
+      <Filter
+        newFilter={newFilter}
+        handleSearchChange={handleSearchChange}
+      />
 
       <h2>Add a new</h2>
 
-      <form onSubmit={addName}>
-        <div className="formInput flexItem">
-          <label htmlFor="name">name:</label>
-          <input id="name" value={newName} onChange={handleNameChange} />
-        </div>
-        <div className="formInput flexItem">
-          <label htmlFor="">number:</label>
-          <input id="number" value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm
+        addName={addName}
+        newName={newName}
+        handleNameChange={handleNameChange}
+        newNumber={newNumber}
+        handleNumberChange={handleNumberChange}
+      />
 
       <h2>Numbers</h2>
 
-      <div className='list'>
-        {personList.length ? personList : "There's no match for the query search"}
-      </div>
+      <Persons
+        persons={persons}
+        newFilter={newFilter}
+      />
+
     </div>
   );
 }
