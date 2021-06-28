@@ -51,3 +51,13 @@ img {
   width: max-content;
   margin: auto;
 }
+
+.countryItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.countryItem > p{
+  margin: .25rem 0;
+}

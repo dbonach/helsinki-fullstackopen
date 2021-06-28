@@ -14,7 +14,20 @@ const SearchInput = (props) => {
   )
 }
 
-const SearchResult = ({ countryName, filtered }) => {
+const CountryResult = ({ country, handleCountryNameChange }) => {
+  return (
+    <div className="countryItem">
+      <p>{country.name}</p>
+      <button
+        type="button"
+        value={country.name}
+        onClick={handleCountryNameChange}
+      >Show</button>
+    </div>
+  )
+}
+
+const SearchResult = ({ countryName, filtered, handleCountryNameChange }) => {
   return (
     <div className='searchResult'>
       {!countryName ?
@@ -22,7 +35,14 @@ const SearchResult = ({ countryName, filtered }) => {
         filtered.length > 10 ?
           'Too many matches, specify another filter' :
           filtered.length === 1 ? '' :
-            filtered.map((c) => <p key={c.name}>{c.name}</p>)
+            filtered.map((c) => {
+              return (
+                <CountryResult
+                  key={c.name}
+                  country={c}
+                  handleCountryNameChange={handleCountryNameChange} />
+              )
+            })
       }
     </div>
   )
@@ -68,6 +88,7 @@ const App = () => {
   }, [])
 
   const handleCountryNameChange = (event) => {
+    console.log(event.target.value);
     const filtered = countries.filter(
       c => c.name.toLowerCase().includes(event.target.value.toLowerCase())
     );
@@ -85,7 +106,8 @@ const App = () => {
       <br />
       <SearchResult
         countryName={countryName}
-        filtered={filtered} />
+        filtered={filtered}
+        handleCountryNameChange={handleCountryNameChange} />
       <CountryData filtered={filtered} />
     </div>
   );
