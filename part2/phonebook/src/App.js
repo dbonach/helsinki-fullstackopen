@@ -28,21 +28,25 @@ const App = () => {
     setNewFilter(event.target.value)
   }
 
+  const addToServer = (newPerson) => {
+    axios.post('http://localhost:3001/persons', newPerson)
+      .then(response => response.data)
+      .then(personResponse => setPersons(persons.concat(personResponse)))
+  }
+
   const addName = (event) => {
     event.preventDefault()
 
     if (!newName || !newNumber) {
       alert("You need to provide name and number!")
-      return
-    }
-
-    if (
+    } else if (
       persons.map((person) => person.name.toLowerCase())
         .includes(newName.toLowerCase())
     ) {
       alert(`${newName} is already added to phonebook`)
     } else {
       const newPerson = { name: newName, number: newNumber }
+      addToServer(newPerson);
       setPersons(persons.concat(newPerson))
     }
 
