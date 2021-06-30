@@ -10,6 +10,11 @@ const remove = id => {
   return axios.delete(baseUrl.concat(`/${id}`))
 }
 
-const requests = { create, remove }
+const update = newContact => {
+  const request = axios.put(baseUrl.concat(`/${newContact.id}`), newContact)
+  return request.then(response => response.data)
+}
+
+const requests = { create, remove, update }
 
 export default requests

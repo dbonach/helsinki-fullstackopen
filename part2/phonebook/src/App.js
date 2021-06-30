@@ -29,13 +29,6 @@ const App = () => {
     setNewFilter(event.target.value)
   }
 
-  const addToServer = (newContact) => {
-    bookService
-      .create(newContact)
-      .then(createdContact => setPersons(persons.concat(createdContact)))
-      .catch(error => console.log("Unable to save on the server"))
-  }
-
   const removeFromServer = (contact) => {
     if (window.confirm(`Delete ${contact.name}?`)) {
       bookService
@@ -48,14 +41,51 @@ const App = () => {
     }
   }
 
+  const updateToServer = (person) => {
+    const response = window.confirm(`${newName} is already added to phonebook, ` +
+      "replace the old number with a new one?")
+
+    if (response) {
+      const newContact = { ...person, number: newNumber }
+      bookService
+        .update(newContact)
+        .then((responseContact) => {
+          const personsList = persons.map(p => p.id !== person.id ? p : newContact)
+          setPersons(personsList)
+          setNewName('')
+          setNewNumber('')
+        })
+        .catch(error => console.log("Unable to update contact"))
+    }
+
+  }
+
+  const addToServer = () => {
+    const newContact = { name: newName, number: newNumber }
+
+    bookService
+      .create(newContact)
+      .then(createdContact => {
+        setPersons(persons.concat(createdContact))
+        setNewName('')
+        setNewNumber('')
+      })
+      .catch(error => console.log("Unable to save on the server"))
+  }
+
+  const nameAlreadyExist = () => {
+    return persons.map((person) => person.name.toLowerCase())
+      .includes(newName.toLowerCase())
+  }
+
   const isInputValid = () => {
     if (!newName || !newNumber) {
       alert("You need to provide name and number!")
-    } else if (
-      persons.map((person) => person.name.toLowerCase())
-        .includes(newName.toLowerCase())
-    ) {
-      alert(`${newName} is already added to phonebook`)
+    } else if (nameAlreadyExist()) {
+      const person = persons.find((person) => {
+        return person.name.toLowerCase() === newName.toLowerCase()
+      })
+      updateToServer(person);
     } else {
       return true
     }
@@ -64,14 +94,10 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
-    if (isInputValid(newName, newNumber)) {
-      const newContact = { name: newName, number: newNumber }
-      addToServer(newContact);
-      setPersons(persons.concat(newContact))
-    }
 
-    setNewName('')
-    setNewNumber('')
+    if (isInputValid(newName, newNumber)) {
+      addToServer();
+    }
   }
 
   return (

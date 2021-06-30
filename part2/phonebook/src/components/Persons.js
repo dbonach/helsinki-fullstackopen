@@ -2,10 +2,8 @@ import React from 'react'
 import Person from './Person';
 
 const Persons = (props) => {
-  const filteredList = props.persons.filter(
-    (person) =>
-      person.name.toLowerCase()
-        .includes(props.newFilter.toLowerCase())
+  const filteredList = props.persons.filter((person) =>
+    person.name.toLowerCase().includes(props.newFilter.toLowerCase())
   );
 
   const personList = filteredList.map(
