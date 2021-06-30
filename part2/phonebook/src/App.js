@@ -36,6 +36,18 @@ const App = () => {
       .catch(error => console.log("Unable to save on the server"))
   }
 
+  const removeFromServer = (contact) => {
+    if (window.confirm(`Delete ${contact.name}?`)) {
+      bookService
+        .remove(contact.id)
+        .then((response) => {
+          const updatedContacts = persons.filter(p => p.id !== contact.id)
+          setPersons(updatedContacts)
+        })
+        .catch(error => console.log("Unable to remove from the server"))
+    }
+  }
+
   const isInputValid = () => {
     if (!newName || !newNumber) {
       alert("You need to provide name and number!")
@@ -87,6 +99,7 @@ const App = () => {
       <Persons
         persons={persons}
         newFilter={newFilter}
+        remove={removeFromServer}
       />
 
     </div>

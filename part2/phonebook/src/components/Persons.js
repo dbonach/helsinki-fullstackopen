@@ -9,7 +9,7 @@ const Persons = (props) => {
   );
 
   const personList = filteredList.map(
-    (person) => <Person key={person.name} person={person} />)
+    (person) => <Person key={person.name} person={person} remove={props.remove} />)
 
   return (
     <div className='list'>

@@ -4,7 +4,11 @@ const Person = (props) => {
   return (
     <p className="flexItem">
       <span>{props.person.name}</span>
-      <span>{props.person.number}</span>
+      <span className="numberRemove">
+        {props.person.number}
+        <button onClick={() => props.remove(props.person)}>remove</button>
+      </span>
+
     </p>
   )
 }

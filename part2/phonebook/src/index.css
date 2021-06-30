@@ -63,3 +63,7 @@ form {
   display: flex;
   justify-content: space-between;
 }
+
+.numberRemove > button {
+  margin-left: .5rem;
+}
