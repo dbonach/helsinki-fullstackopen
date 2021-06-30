@@ -34,9 +34,7 @@ const App = () => {
       .then(personResponse => setPersons(persons.concat(personResponse)))
   }
 
-  const addName = (event) => {
-    event.preventDefault()
-
+  const isInputValid = () => {
     if (!newName || !newNumber) {
       alert("You need to provide name and number!")
     } else if (
@@ -45,6 +43,14 @@ const App = () => {
     ) {
       alert(`${newName} is already added to phonebook`)
     } else {
+      return true
+    }
+    return false
+  }
+
+  const addName = (event) => {
+    event.preventDefault()
+    if (isInputValid(newName, newNumber)) {
       const newPerson = { name: newName, number: newNumber }
       addToServer(newPerson);
       setPersons(persons.concat(newPerson))
@@ -53,7 +59,6 @@ const App = () => {
     setNewName('')
     setNewNumber('')
   }
-
 
   return (
     <div className="wrapper">
