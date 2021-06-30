@@ -3,6 +3,7 @@ import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import bookService from './services/contacts'
 
 
 const App = () => {
@@ -28,10 +29,11 @@ const App = () => {
     setNewFilter(event.target.value)
   }
 
-  const addToServer = (newPerson) => {
-    axios.post('http://localhost:3001/persons', newPerson)
-      .then(response => response.data)
-      .then(personResponse => setPersons(persons.concat(personResponse)))
+  const addToServer = (newContact) => {
+    bookService
+      .create(newContact)
+      .then(createdContact => setPersons(persons.concat(createdContact)))
+      .catch(error => console.log("Unable to save on the server"))
   }
 
   const isInputValid = () => {
@@ -51,9 +53,9 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault()
     if (isInputValid(newName, newNumber)) {
-      const newPerson = { name: newName, number: newNumber }
-      addToServer(newPerson);
-      setPersons(persons.concat(newPerson))
+      const newContact = { name: newName, number: newNumber }
+      addToServer(newContact);
+      setPersons(persons.concat(newContact))
     }
 
     setNewName('')
