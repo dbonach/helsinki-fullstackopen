@@ -1,68 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-
-const Filter = (props) => {
-  return (
-    <div className="searchFilter flexItem">
-      <label htmlFor="search">Search for a name:</label>
-      <input
-        id="search"
-        value={props.newFilter}
-        onChange={props.handleSearchChange} />
-    </div>
-  )
-}
-
-const PersonForm = (props) => {
-  return (
-    <form onSubmit={props.addName}>
-      <div className="formInput flexItem">
-        <label htmlFor="name">name:</label>
-        <input
-          id="name"
-          value={props.newName}
-          onChange={props.handleNameChange} />
-      </div>
-      <div className="formInput flexItem">
-        <label htmlFor="">number:</label>
-        <input
-          id="number"
-          value={props.newNumber}
-          onChange={props.handleNumberChange} />
-      </div>
-      <div>
-        <button type="submit">add</button>
-      </div>
-    </form>
-  );
-}
-
-const Person = (props) => {
-  return (
-    <p className="flexItem">
-      <span>{props.person.name}</span>
-      <span>{props.person.number}</span>
-    </p>
-  )
-}
-
-const Persons = (props) => {
-  const filteredList = props.persons.filter(
-    (person) =>
-      person.name.toLowerCase()
-        .includes(props.newFilter.toLowerCase())
-  );
-
-  const personList = filteredList.map(
-    (person) => <Person key={person.name} person={person} />)
-
-  return (
-    <div className='list'>
-      {filteredList.length ? personList
-        : "There's no match for the query search"}
-    </div>
-  );
-}
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 
 const App = () => {
