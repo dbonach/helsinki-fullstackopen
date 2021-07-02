@@ -1,3 +1,4 @@
+// Set of functions create, remove and update contacts in the server
 import axios from 'axios'
 const baseUrl = 'http://localhost:3001/persons'
 

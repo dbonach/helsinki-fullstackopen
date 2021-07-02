@@ -56,7 +56,22 @@ label {
 }
 
 form {
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
+}
+
+.error {
+  min-height: 2rem;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: limegreen;
+  color: white;
+  border-radius: .25rem;
+}
+
+.errorBox {
+  height: 2rem;
 }
 
 .flexItem {

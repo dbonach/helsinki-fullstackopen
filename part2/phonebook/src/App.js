@@ -5,12 +5,25 @@ import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import bookService from './services/contacts'
 
+const Notification = ({ message }) => {
+  if (message == null) {
+    return <div className="errorBox"></div>;
+  }
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
+
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     axios.get('http://localhost:3001/persons')
@@ -67,6 +80,10 @@ const App = () => {
       .create(newContact)
       .then(createdContact => {
         setPersons(persons.concat(createdContact))
+        setErrorMessage(`${newName} contact created`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 3000)
         setNewName('')
         setNewNumber('')
       })
@@ -119,6 +136,8 @@ const App = () => {
         newNumber={newNumber}
         handleNumberChange={handleNumberChange}
       />
+
+      <Notification message={errorMessage} />
 
       <h2>Numbers</h2>
 
