@@ -10,10 +10,10 @@ const Persons = (props) => {
     (person) => <Person key={person.name} person={person} remove={props.remove} />)
 
   return (
-    <div className='list'>
+    <ul className='list'>
       {filteredList.length ? personList
         : "There's no match for the query search"}
-    </div>
+    </ul>
   );
 }
 

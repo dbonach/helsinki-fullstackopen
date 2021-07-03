@@ -38,9 +38,12 @@ input {
   min-width: max-content;
 }
 
-.list > p {
-  justify-content: space-between;
-  margin: 0;
+.list {
+  padding: 0;
+}
+
+.list > li {
+  margin-bottom: .25rem;
 }
 
 .list span:first-of-type {
@@ -64,7 +67,7 @@ form {
 }
 
 .error {
-  min-height: 1rem;
+  min-height: 1.25rem;
   margin: 0;
   display: flex;
   justify-content: center;
@@ -85,8 +88,15 @@ form {
 .flexItem {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.numberRemove {
+  display: flex;
+  align-items: center;
 }
 
 .numberRemove > button {
   margin-left: .5rem;
+  padding: 0 5px;
 }
