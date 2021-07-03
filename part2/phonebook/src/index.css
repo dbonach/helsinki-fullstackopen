@@ -16,9 +16,13 @@ code {
   padding: 1rem;
 }
 
+input {
+  outline: none;
+}
+
 .wrapper {
   max-width: 400px;
-  min-width: max-content;
+  min-width: min-content;
   margin: auto;
   padding: 1rem;
   border: 1px solid #ddd;
@@ -60,18 +64,22 @@ form {
 }
 
 .error {
-  min-height: 2rem;
+  min-height: 1rem;
   margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: limegreen;
   color: white;
   border-radius: .25rem;
+  padding: .25rem .5rem;
 }
 
-.errorBox {
-  height: 2rem;
+.success {
+  background-color: limegreen;
+}
+
+.failure {
+  background-color: indianred;
 }
 
 .flexItem {

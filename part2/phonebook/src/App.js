@@ -5,16 +5,17 @@ import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import bookService from './services/contacts'
 
-const Notification = ({ message }) => {
-  if (message == null) {
-    return <div className="errorBox"></div>;
+const Notification = ({ errorMessage }) => {
+  if (errorMessage.message === null) {
+    return <div className="error"></div>;
   }
 
   return (
-    <div className="error">
-      {message}
+    <div className={`error ${errorMessage.success ? "success" : "failure"}`}>
+      {errorMessage.message}
     </div>
   )
+
 }
 
 
@@ -23,7 +24,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(
+    { message: null, success: true })
 
   useEffect(() => {
     axios.get('http://localhost:3001/persons')
@@ -50,7 +52,7 @@ const App = () => {
           const updatedContacts = persons.filter(p => p.id !== contact.id)
           setPersons(updatedContacts)
         })
-        .catch(error => console.log("Unable to remove from the server"))
+        .catch(error => { console.log("Unable to remove from the server") })
     }
   }
 
@@ -68,7 +70,18 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
-        .catch(error => console.log("Unable to update contact"))
+        .catch(error => {
+          console.log("Unable to update to the server")
+          setErrorMessage({
+            message: `Information of ${newName} has already been removed from server`,
+            success: false
+          })
+          setTimeout(() => {
+            setErrorMessage({ ...errorMessage, message: null })
+          }, 5000)
+          setNewName('')
+          setNewNumber('')
+        })
     }
 
   }
@@ -80,9 +93,9 @@ const App = () => {
       .create(newContact)
       .then(createdContact => {
         setPersons(persons.concat(createdContact))
-        setErrorMessage(`${newName} contact created`)
+        setErrorMessage({ message: `${newName} contact created`, success: true })
         setTimeout(() => {
-          setErrorMessage(null)
+          setErrorMessage({ ...errorMessage, message: null })
         }, 3000)
         setNewName('')
         setNewNumber('')
@@ -137,7 +150,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
 
-      <Notification message={errorMessage} />
+      <Notification errorMessage={errorMessage} />
 
       <h2>Numbers</h2>
 
