@@ -2,7 +2,7 @@
 
 This is my implementation to problems 2.12 ~ 2.14 from [FullStackOpen](https://fullstackopen.com/en/)
 
-It's a simple application that fetch data about all countries in the world from [RestCountries API](https://restcountries.eu). 
+It's a simple application that fetchs data about all countries in the world from [RestCountries API](https://restcountries.eu). 
 
 <br/>
 
@@ -22,7 +22,7 @@ It'll also fetch data from [WeatherStack API](https://weatherstack.com/), and di
 
 ### How to run
 
-You can run it locally by cloning all the repo files, navigating to `helsinki-fullstackopen/part2/countries`, run `npm install` to install all depedencies and then `npm start`, but running it locally won't show the weather infos because an api_key is required.
+You can run it locally by cloning all the repo files, navigating to `helsinki-fullstackopen/part2/countries`, run `npm install` to install all dependencies and then `npm start`, but running it locally won't show the weather infos because an api_key is required.
 
 <br/>
 
