@@ -1,6 +1,6 @@
 ## Simple App that shows information about countries
 
-This is my implementation to problems 2.12 ~ 2.14 from [FullStackOpen](https://fullstackopen.com/)
+This is my implementation to problems 2.12 ~ 2.14 from [FullStackOpen](https://fullstackopen.com/en/)
 
 It's a simple application that fetch data about all countries in the world from [RestCountries API](https://restcountries.eu). 
 
