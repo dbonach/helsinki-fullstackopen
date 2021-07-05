@@ -123,7 +123,8 @@ const App = () => {
   // Fetch weather information when capital changes
   useEffect(() => {
     // Guarantee no fetch in the first render
-    if (capital) {
+    // Only fetch data if there's an api_key
+    if (capital && api_key) {
       axios.get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${capital}`)
         .then(response => {
           const weather = response.data
