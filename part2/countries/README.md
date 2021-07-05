@@ -27,7 +27,6 @@ You can run it locally by cloning all the repo files, navigating to `helsinki-fu
 <br/>
 
 ### Gif showing it working 
-
-<p align="center">
+<p>
 <img src="https://user-images.githubusercontent.com/62313672/124417457-95b80a80-dd2f-11eb-8bae-6472bc4e0899.gif" width="50%">
 </p>
