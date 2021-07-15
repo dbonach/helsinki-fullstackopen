@@ -8,12 +8,12 @@ It's a simple application that display and saves new contacts to the [JSON Serve
 
 ### How it works
 
-- The input just filter and shows the contacts that match with the partial name been typed.
+- The input filters and shows the contacts that match with the partial name being typed.
 - If a new name is added, a post request will be generated and from its response the app state will be updated with the new contact.
 - If the name already exists a put request will be generated to update the contact, from the response the app state will be updated with the new info.
 - Clicking on `remove` will generate a delete request to the JSON Server and then the app state will be updated.
 - When a contact is added a success message is shown.
-- If the user tries to remove a contact that was already removed, and error message will be shown.
+- If the user tries to remove a contact that was already removed, an error message will be shown.
 
 <br/>
 
