@@ -13,6 +13,10 @@ code {
     monospace;
 }
 
+p {
+  margin: 0.5rem 0;
+}
+
 .searchResult > p:first-of-type {
  margin-top: 0;
 }
@@ -45,7 +49,7 @@ label {
 
 #flag {
   border: 1px solid #ddd;
-  width: 300px;
+  width: 200px;
 }
 
 .flag {
@@ -64,7 +68,7 @@ label {
 }
 
 .weather {
-  margin-top: 3rem;
+  margin-top: 2rem;
 }
 
 .weather > img {
