@@ -1,13 +1,1 @@
-part1/courseinfo/newapp/node_modules/
-part1/unicafe/node_modules/
-part1/anecdotes/node_modules/
-part2/courseinfo/node_modules/
-part2/phonebook/node_modules/
-part2/countries/node_modules/
-part2/phonebook/build/
-
-*/*/*/node_modules/
 */*/node_modules/
-*/node_modules/
-
-
