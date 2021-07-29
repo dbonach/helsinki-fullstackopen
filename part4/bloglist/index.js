@@ -7,9 +7,10 @@ require('dotenv').config()
 const Blog = require('./models/blog')
 const logger = require('./utils/logger')
 const middleware = require('./utils/middleware')
+const config = require('./utils/config')
 
 
-let mongoUrl = process.env.MONGODB_URI
+let mongoUrl = config.MONGODB_URI
 mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -50,7 +51,6 @@ app.post('/api/blogs', (request, response, next) => {
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
-const PORT = 3003
-app.listen(PORT, () => {
-  logger.info(`Server running on port ${PORT}`)
+app.listen(config.PORT, () => {
+  logger.info(`Server running on port ${config.PORT}`)
 })
