@@ -4,22 +4,24 @@ const dummy = (blog) => {
 }
 
 const totalLikes = (blogs) => {
-  // let likesArray = blogs.map(b => b.likes)
 
-  // let likesTotal = likesArray.reduce(
-  //   (total, currentLike) => total + currentLike, 0
-  // )
-  let likesTotal = blogs.reduce(
+  const likesTotal = blogs.reduce(
     (total, currentBlog) => total + currentBlog.likes, 0)
 
   return likesTotal
 }
 
-// const favoriteBlog = (blogs) => {
+const favoriteBlog = (blogs) => {
+  const blog = blogs.reduce(
+    (firstBlog, currentBlog) =>
+      currentBlog.likes > firstBlog.likes ? currentBlog : firstBlog
+  )
 
-// })
+  return blog
+}
 
 module.exports = {
   dummy,
-  totalLikes
+  totalLikes,
+  favoriteBlog
 }
