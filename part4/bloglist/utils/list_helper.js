@@ -21,32 +21,53 @@ const favoriteBlog = (blogs) => {
 }
 
 const mostBlogs = (blogs) => {
-  // reduce the array of objects to an array with only author names
-  let authors = blogs.map(blog => blog.author)
 
-  // reduce author's array to an object with
-  // their names and number of blogs
-  const occurrences = authors.reduce((obj, author) => {
-    obj[author] = (obj[author] || 0) + 1
+  // reduce blogs array of objects to an object with
+  // author names and the total number of blogs
+  const occurrences = blogs.reduce((obj, blog) => {
+    obj[blog.author] = (obj[blog.author] || 0) + 1
     return obj
   }, {})
 
   // isolate the author with the greatest number of blogs
-  let max = 0
+  let maxBlogs = -1
   let mostAuthor = ''
   for (let author in occurrences) {
-    if (occurrences[author] > max) {
-      max = occurrences[author]
+    if (occurrences[author] > maxBlogs) {
+      maxBlogs = occurrences[author]
       mostAuthor = author
     }
   }
 
-  return { author: mostAuthor, blogs: max }
+  return { author: mostAuthor, blogs: maxBlogs }
+}
+
+const mostLikes = (blogs) => {
+
+  // reduce blogs array of objects to an object with
+  // author names and the total number of likes
+  const occurrences = blogs.reduce((obj, blog) => {
+    obj[blog.author] = (obj[blog.author] || 0) + blog.likes
+    return obj
+  }, {})
+
+  // isolate the author with the greatest number of likes
+  let maxLikes = -1
+  let mostAuthor = ''
+  for (let author in occurrences) {
+    if (occurrences[author] > maxLikes) {
+      maxLikes = occurrences[author]
+      mostAuthor = author
+    }
+  }
+
+  return { author: mostAuthor, likes: maxLikes }
 }
 
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
