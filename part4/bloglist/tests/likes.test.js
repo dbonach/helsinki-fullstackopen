@@ -1,5 +1,5 @@
 const totalLikes = require('../utils/list_helper').totalLikes
-const dummyData = require('../utils/dummy_data')
+const dummyData = require('./dummy_data')
 
 describe('total likes', () => {
 

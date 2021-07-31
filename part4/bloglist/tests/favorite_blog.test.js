@@ -1,5 +1,5 @@
 const favoriteBlog = require('../utils/list_helper').favoriteBlog
-const listWithFiveBlogs = require('../utils/dummy_data').listWithFiveBlogs
+const listWithFiveBlogs = require('./dummy_data').listWithFiveBlogs
 
 describe('find the most voted blog', () => {
 

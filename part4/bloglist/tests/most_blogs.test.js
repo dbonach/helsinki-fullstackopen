@@ -1,5 +1,5 @@
 const mostBlogs = require('../utils/list_helper').mostBlogs
-const listWithFiveBlogs = require('../utils/dummy_data').listWithFiveBlogs
+const listWithFiveBlogs = require('./dummy_data').listWithFiveBlogs
 
 describe('find author with the most number of blog posts', () => {
 
