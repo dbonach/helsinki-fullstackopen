@@ -1,5 +1,3 @@
-const Blog = require('../models/blog')
-
 const initialBlogs = [
   {
     title: 'React patterns',
