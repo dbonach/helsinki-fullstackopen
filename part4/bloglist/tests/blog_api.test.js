@@ -27,6 +27,15 @@ describe('test endpoints', () => {
     expect(response.body).toHaveLength(helper.initialBlogs.length)
   })
 
+  test('unique identifier property of a blog post is named id', async () => {
+    const response = await api
+      .get('/api/blogs')
+
+    const firstPost = response.body[1]
+
+    expect(firstPost.id).toBeDefined()
+  })
+
   afterAll(() => {
     mongoose.connection.close()
   })
