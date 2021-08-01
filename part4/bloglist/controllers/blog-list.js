@@ -28,10 +28,11 @@ blogRouter.delete('/:id', async (request, response) => {
 blogRouter.put('/:id', async (request, response) => {
   const body = request.body
 
+  if (body.likes === undefined) {
+    response.status(400).end()
+  }
+
   const blog = {
-    title: body.title,
-    author: body.author,
-    url: body.url,
     likes: body.likes
   }
 

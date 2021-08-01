@@ -6,9 +6,11 @@ const Blog = require('../models/blog')
 const helper = require('./test_helper')
 require('express-async-errors')
 
-describe('test endpoints', () => {
+describe('test endpoints, initially some notes saved', () => {
 
-  beforeEach(async () => {
+  // Changed from beforeEach to beforeAll, in the actual state there's
+  // no problem, but if more tests are added it should be revised.
+  beforeAll(async () => {
     await Blog.deleteMany({})
 
     const blogsSaved = helper.listWithTwoBlogs
@@ -16,9 +18,13 @@ describe('test endpoints', () => {
 
     const promiseArray = blogsSaved.map(blog => blog.save())
     await Promise.all(promiseArray)
+
+    // Or we could use this way to save the blogs
+    // await Blog.insertMany(helper.listWithTwoBlogs)
   })
 
   test('step1, return correct amount of blog posts in json', async () => {
+
     const response = await api
       .get('/api/blogs')
       .expect(200)
@@ -27,9 +33,13 @@ describe('test endpoints', () => {
     expect(response.body).toHaveLength(helper.listWithTwoBlogs.length)
   })
 
-  test('step2, unique identifier property of a blog post is named id', async () => {
+  test('step2, unique identifier property is named id', async () => {
+
     const response = await api
       .get('/api/blogs')
+      .expect(200)
+
+    expect(response.body.length).toBeGreaterThan(0)
 
     const firstPost = response.body[1]
 
@@ -50,37 +60,66 @@ describe('test endpoints', () => {
 
     const lastSavedBlog = savedBlogs.body[helper.listWithTwoBlogs.length]
     expect(lastSavedBlog).toEqual(createdBlog.body)
+
+    // Or we could fetch the last by its id
+    // const lastSavedBlog = await Blog.findById(createdBlog.body.id)
+    // expect(lastSavedBlog.toJSON()).toEqual(createdBlog.body)  
   })
 
-  test('step4, if likes property is missing, it will be 0', async () => {
-    const blog = {
-      title: 'TDD harms architecture',
-      author: 'Robert C. Martin',
-      url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
-    }
+  test('step4, if likes property is missing, default will be 0', async () => {
 
     const savedBlog = await api
       .post('/api/blogs')
-      .send(blog)
+      .send(helper.missingIdBlog)
       .expect(201)
 
     expect(savedBlog.body.likes).toBe(0)
   })
 
   test('step5, if title and url are missing, 400 code is generated', async () => {
-    const blog = {
-      author: 'Robert C. Martin',
-      likes: 10,
-    }
 
     await api
       .post('/api/blogs')
-      .send(blog)
+      .send(helper.missingUrlAndTitleBlog)
       .expect(400)
   })
 
-  afterAll(() => {
-    mongoose.connection.close()
+})
+
+
+describe('expansion tests', () => {
+
+  test('expansion stp1, delete request deletes a blog post', async () => {
+
+    const blog = new Blog(helper.uniqueBlogPost)
+    await blog.save()
+
+    await api
+      .delete(`/api/blogs/${blog._id}`)
+      .expect(204)
+
+    const response = await Blog.findById(blog._id)
+    expect(response).toBe(null)
   })
 
+  test('expansion stp2, updates a blog likes property', async () => {
+
+    const blog = new Blog(helper.uniqueBlogPost)
+    await blog.save()
+
+    const infoToUpdate = {
+      likes: blog.likes + 5
+    }
+
+    const updatedBlog = await api
+      .put(`/api/blogs/${blog._id}`)
+      .send(infoToUpdate)
+      .expect(200)
+
+    expect(updatedBlog.body.likes).toBe(blog.likes + 5)
+  })
+})
+
+afterAll(() => {
+  mongoose.connection.close()
 })

@@ -20,7 +20,20 @@ const uniqueBlogPost = {
   likes: 2
 }
 
+const missingIdBlog = {
+  title: 'TDD harms architecture',
+  author: 'Robert C. Martin',
+  url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+}
+
+const missingUrlAndTitleBlog = {
+  author: 'Robert C. Martin',
+  likes: 10,
+}
+
 module.exports = {
   listWithTwoBlogs,
-  uniqueBlogPost
+  uniqueBlogPost,
+  missingIdBlog,
+  missingUrlAndTitleBlog
 }
