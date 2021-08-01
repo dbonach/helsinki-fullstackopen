@@ -67,6 +67,18 @@ describe('test endpoints', () => {
     expect(savedBlog.body.likes).toBe(0)
   })
 
+  test('step5, if title and url are missing, 400 code is generated', async () => {
+    const blog = {
+      author: 'Robert C. Martin',
+      likes: 10,
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(blog)
+      .expect(400)
+  })
+
   afterAll(() => {
     mongoose.connection.close()
   })
