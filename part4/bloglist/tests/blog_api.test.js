@@ -11,29 +11,45 @@ describe('test endpoints', () => {
   beforeEach(async () => {
     await Blog.deleteMany({})
 
-    const blogsSaved = helper.initialBlogs
+    const blogsSaved = helper.listWithTwoBlogs
       .map(blog => new Blog(blog))
 
     const promiseArray = blogsSaved.map(blog => blog.save())
     await Promise.all(promiseArray)
   })
 
-  test('return correct amount of blog posts in json', async () => {
+  test('step1, return correct amount of blog posts in json', async () => {
     const response = await api
       .get('/api/blogs')
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
-    expect(response.body).toHaveLength(helper.initialBlogs.length)
+    expect(response.body).toHaveLength(helper.listWithTwoBlogs.length)
   })
 
-  test('unique identifier property of a blog post is named id', async () => {
+  test('step2, unique identifier property of a blog post is named id', async () => {
     const response = await api
       .get('/api/blogs')
 
     const firstPost = response.body[1]
 
     expect(firstPost.id).toBeDefined()
+  })
+
+  test('step3, post request creates a new blog', async () => {
+
+    const createdBlog = await api.post('/api/blogs')
+      .send(helper.uniqueBlogPost)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const savedBlogs = await api
+      .get('/api/blogs')
+
+    expect(savedBlogs.body).toHaveLength(helper.listWithTwoBlogs.length + 1)
+
+    const lastSavedBlog = savedBlogs.body[helper.listWithTwoBlogs.length]
+    expect(lastSavedBlog).toEqual(createdBlog.body)
   })
 
   afterAll(() => {

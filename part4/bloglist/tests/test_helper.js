@@ -1,4 +1,4 @@
-const initialBlogs = [
+const listWithTwoBlogs = [
   {
     title: 'React patterns',
     author: 'Michael Chan',
@@ -13,6 +13,14 @@ const initialBlogs = [
   }
 ]
 
+const uniqueBlogPost = {
+  title: 'Type wars',
+  author: 'Robert C. Martin',
+  url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+  likes: 2
+}
+
 module.exports = {
-  initialBlogs
+  listWithTwoBlogs,
+  uniqueBlogPost
 }
