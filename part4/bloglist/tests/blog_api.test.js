@@ -52,6 +52,21 @@ describe('test endpoints', () => {
     expect(lastSavedBlog).toEqual(createdBlog.body)
   })
 
+  test('step4, if likes property is missing, it will be 0', async () => {
+    const blog = {
+      title: 'TDD harms architecture',
+      author: 'Robert C. Martin',
+      url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+    }
+
+    const savedBlog = await api
+      .post('/api/blogs')
+      .send(blog)
+      .expect(201)
+
+    expect(savedBlog.body.likes).toBe(0)
+  })
+
   afterAll(() => {
     mongoose.connection.close()
   })
