@@ -1,3 +1,5 @@
+const User = require('../models/user')
+
 const listWithTwoBlogs = [
   {
     title: 'React patterns',
@@ -31,9 +33,15 @@ const missingUrlAndTitleBlog = {
   likes: 10,
 }
 
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map(user => user.toJSON())
+}
+
 module.exports = {
   listWithTwoBlogs,
   uniqueBlogPost,
   missingIdBlog,
-  missingUrlAndTitleBlog
+  missingUrlAndTitleBlog,
+  usersInDb
 }

@@ -3,6 +3,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test_helper')
 require('express-async-errors')
 
@@ -89,6 +90,10 @@ describe('test endpoints, initially some notes saved', () => {
 
 describe('expansion tests', () => {
 
+  beforeAll(async () => {
+    await User.deleteMany({})
+  })
+
   test('expansion stp1, delete request deletes a blog post', async () => {
 
     const blog = new Blog(helper.uniqueBlogPost)
@@ -117,6 +122,29 @@ describe('expansion tests', () => {
       .expect(200)
 
     expect(updatedBlog.body.likes).toBe(blog.likes + 5)
+  })
+
+  test('expansion stp3, create new users', async () => {
+
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'mluukkai',
+      name: 'Matti Luukkainen',
+      password: 'salainen'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    expect(usernames).toContain(newUser.username)
   })
 })
 
