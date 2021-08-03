@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
@@ -92,7 +93,19 @@ describe('expansion tests', () => {
 
   beforeAll(async () => {
     await User.deleteMany({})
+
+    const saltRounds = 10
+    const passwordHash = await bcrypt.hash('salainen', saltRounds)
+
+    const newUser = new User({
+      username: 'uniqueUser',
+      name: 'testUser',
+      passwordHash
+    })
+
+    await newUser.save()
   })
+
 
   test('expansion stp1, delete request deletes a blog post', async () => {
 
@@ -145,6 +158,96 @@ describe('expansion tests', () => {
 
     const usernames = usersAtEnd.map(u => u.username)
     expect(usernames).toContain(newUser.username)
+  })
+
+  test('expansion stp4-1, creation of user missing username', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      name: 'Random',
+      password: 'wefjiok'
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(401)
+
+    expect(response.body.error).toBe('missing username or password')
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    expect(usernames).not.toContain(newUser.username)
+  })
+
+  test('expansion stp4-2, creation of user missing password', async () => {
+
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'random',
+      name: 'Random',
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(401)
+
+    expect(response.body.error).toBe('missing username or password')
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    expect(usernames).not.toContain(newUser.username)
+  })
+
+  test('expansion stp4-3, creation of user password with less than 3 characters', async () => {
+
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'random',
+      name: 'Random',
+      password: 'fe'
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(401)
+
+    expect(response.body.error).toBe('password must be at least 3 characters long')
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    expect(usernames).not.toContain(newUser.username)
+  })
+
+  test('expansion stp4-4, creation of already existing username must result in error', async () => {
+
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'uniqueUser',
+      name: 'DifferentUser',
+      password: 'secret'
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    expect(response.body.error).toContain('expected `username` to be unique')
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
   })
 })
 
