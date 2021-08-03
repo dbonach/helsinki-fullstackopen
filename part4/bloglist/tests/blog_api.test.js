@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
@@ -13,10 +12,13 @@ describe('test endpoints, initially some notes saved', () => {
   // Changed from beforeEach to beforeAll, in the actual state there's
   // no problem, but if more tests are added it should be revised.
   beforeAll(async () => {
+    await User.deleteMany({})
+    const uniqueUser = await helper.createUniqueUser()
+
     await Blog.deleteMany({})
 
     const blogsSaved = helper.listWithTwoBlogs
-      .map(blog => new Blog(blog))
+      .map(blog => new Blog({ ...blog, user: uniqueUser._id }))
 
     const promiseArray = blogsSaved.map(blog => blog.save())
     await Promise.all(promiseArray)
@@ -50,6 +52,8 @@ describe('test endpoints, initially some notes saved', () => {
 
   test('step3, post request creates a new blog', async () => {
 
+    const blogsAtStart = await helper.blogsInDb()
+
     const createdBlog = await api.post('/api/blogs')
       .send(helper.uniqueBlogPost)
       .expect(201)
@@ -58,14 +62,19 @@ describe('test endpoints, initially some notes saved', () => {
     const savedBlogs = await api
       .get('/api/blogs')
 
-    expect(savedBlogs.body).toHaveLength(helper.listWithTwoBlogs.length + 1)
+    expect(savedBlogs.body).toHaveLength(blogsAtStart.length + 1)
 
-    const lastSavedBlog = savedBlogs.body[helper.listWithTwoBlogs.length]
-    expect(lastSavedBlog).toEqual(createdBlog.body)
+    const lastSavedBlog = await Blog
+      .findById(createdBlog.body.id)
 
-    // Or we could fetch the last by its id
-    // const lastSavedBlog = await Blog.findById(createdBlog.body.id)
-    // expect(lastSavedBlog.toJSON()).toEqual(createdBlog.body)  
+    const modifiedLastSavedBlog = {
+      title: lastSavedBlog.title,
+      author: lastSavedBlog.author,
+      url: lastSavedBlog.url,
+      likes: lastSavedBlog.likes
+    }
+
+    expect(modifiedLastSavedBlog).toEqual(helper.uniqueBlogPost)
   })
 
   test('step4, if likes property is missing, default will be 0', async () => {
@@ -86,6 +95,40 @@ describe('test endpoints, initially some notes saved', () => {
       .expect(400)
   })
 
+  test('expansion stp5-1, fetching all blogs, one must contain information of its creator', async () => {
+
+    const response = await api
+      .get('/api/blogs/')
+      .expect(200)
+
+    expect(response.body.length).not.toBe(0)
+
+    const firstPost = response.body[1]
+    expect(firstPost.user).toBeDefined()
+
+    const user = await User.findById(firstPost.user.id)
+
+    const modifiedUser = { username: user.username, name: user.name, id: user._id.toString() }
+
+    expect(firstPost.user).toEqual(modifiedUser)
+  })
+
+  test('expansion stp5-2, fetching a unique blog it must contain information of its creator', async () => {
+
+    const randomBlog = await Blog.findOne({})
+
+    const response = await api
+      .get(`/api/blogs/${randomBlog._id.toString()}`)
+      .expect(200)
+
+    expect(response.body.user).toBeDefined()
+
+    const user = await User.findById(response.body.user.id)
+
+    const modifiedUser = { username: user.username, name: user.name, id: user._id.toString() }
+
+    expect(response.body.user).toEqual(modifiedUser)
+  })
 })
 
 
@@ -93,17 +136,7 @@ describe('expansion tests', () => {
 
   beforeAll(async () => {
     await User.deleteMany({})
-
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash('salainen', saltRounds)
-
-    const newUser = new User({
-      username: 'uniqueUser',
-      name: 'testUser',
-      passwordHash
-    })
-
-    await newUser.save()
+    await helper.createUniqueUser()
   })
 
 
