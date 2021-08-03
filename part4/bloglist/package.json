@@ -6,7 +6,7 @@
   "scripts": {
     "start": "NODE_ENV=production node index.js",
     "dev": "NODE_ENV=development nodemon index.js",
-    "test": "NODE_END=test jest --verbose",
+    "test": "NODE_END=test jest --verbose --runInBand",
     "lint": "eslint ."
   },
   "author": "Deivit Bonach",
