@@ -1,4 +1,6 @@
 const User = require('../models/user')
+const Blog = require('../models/blog')
+const bcrypt = require('bcrypt')
 
 const listWithTwoBlogs = [
   {
@@ -38,10 +40,31 @@ const usersInDb = async () => {
   return users.map(user => user.toJSON())
 }
 
+const blogsInDb = async () => {
+  const blogs = await Blog.find({})
+  return blogs.map(blog => blog.toJSON())
+}
+
+const createUniqueUser = async () => {
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash('salainen', saltRounds)
+
+  const newUser = new User({
+    username: 'uniqueUser',
+    name: 'testUser',
+    passwordHash
+  })
+
+  const user = await newUser.save()
+  return user
+}
+
 module.exports = {
   listWithTwoBlogs,
   uniqueBlogPost,
   missingIdBlog,
   missingUrlAndTitleBlog,
-  usersInDb
+  usersInDb,
+  createUniqueUser,
+  blogsInDb
 }
