@@ -17,10 +17,13 @@ describe('test endpoints, initially some notes saved', () => {
 
     await Blog.deleteMany({})
 
-    const blogsSaved = helper.listWithTwoBlogs
+    const savedBlogs = helper.listWithTwoBlogs
       .map(blog => new Blog({ ...blog, user: uniqueUser._id }))
 
-    const promiseArray = blogsSaved.map(blog => blog.save())
+    uniqueUser.blogs = savedBlogs.map(blog => blog._id)
+    uniqueUser.save()
+
+    const promiseArray = savedBlogs.map(blog => blog.save())
     await Promise.all(promiseArray)
 
     // Or we could use this way to save the blogs
@@ -128,6 +131,24 @@ describe('test endpoints, initially some notes saved', () => {
     const modifiedUser = { username: user.username, name: user.name, id: user._id.toString() }
 
     expect(response.body.user).toEqual(modifiedUser)
+  })
+
+  test('expansion stp5-3, fetched user shows all created blogs by him', async () => {
+
+    const user = await User.findOne({ username: 'uniqueUser' })
+    expect(user).toBeDefined()
+
+    const response = await api
+      .get(`/api/users/${user._id.toString()}`)
+      .expect(200)
+
+    const fetchedUser = response.body
+    expect(fetchedUser.blogs).toBeDefined()
+    expect(fetchedUser.blogs).toHaveLength(helper.listWithTwoBlogs.length)
+
+    const blogTitles = fetchedUser.blogs.map(blog => blog.title)
+    expect(blogTitles).toContain(helper.listWithTwoBlogs[0].title)
+    expect(blogTitles).toContain(helper.listWithTwoBlogs[1].title)
   })
 })
 
