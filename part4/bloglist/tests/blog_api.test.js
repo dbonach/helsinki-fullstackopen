@@ -17,7 +17,7 @@ describe('test endpoints, initially some notes saved', () => {
   beforeAll(async () => {
     await User.deleteMany({})
     const uniqueUser = await helper.createUniqueUser()
-    token = helper.getToken(uniqueUser)
+    token = helper.createToken(uniqueUser)
 
     await Blog.deleteMany({})
 
@@ -242,7 +242,7 @@ describe('expansion tests', () => {
   beforeAll(async () => {
     await User.deleteMany({})
     const uniqueUser = await helper.createUniqueUser()
-    token = helper.getToken(uniqueUser)
+    token = helper.createToken(uniqueUser)
   })
 
 

@@ -65,7 +65,7 @@ const createUniqueUser = async () => {
   return user
 }
 
-const getToken = (user) => {
+const createToken = (user) => {
 
   const userForToken = {
     username: user.username,
@@ -90,5 +90,5 @@ module.exports = {
   createUniqueUser,
   blogsInDb,
   userToLogin,
-  getToken
+  createToken
 }
