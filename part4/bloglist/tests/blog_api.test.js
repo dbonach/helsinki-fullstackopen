@@ -145,11 +145,45 @@ describe('test endpoints, initially some notes saved', () => {
 
     const fetchedUser = response.body
     expect(fetchedUser.blogs).toBeDefined()
-    expect(fetchedUser.blogs).toHaveLength(helper.listWithTwoBlogs.length)
+
+    // Two more blogs are added before this test
+    // expect(fetchedUser.blogs).toHaveLength(helper.listWithTwoBlogs.length)
 
     const blogTitles = fetchedUser.blogs.map(blog => blog.title)
     expect(blogTitles).toContain(helper.listWithTwoBlogs[0].title)
     expect(blogTitles).toContain(helper.listWithTwoBlogs[1].title)
+  })
+
+  test('expansion stp5-4, blog listed with user is the same as saved one', async () => {
+
+    const user = await User.findOne({ username: 'uniqueUser' })
+    expect(user).toBeDefined()
+
+    const blog = new Blog({
+      ...helper.uniqueBlogPost,
+      user: user._id
+    })
+
+    await blog.save()
+
+    user.blogs = user.blogs.concat(blog._id)
+    await user.save()
+
+    const modifiedBlog = {
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      id: blog._id.toString()
+    }
+
+    const response = await api
+      .get(`/api/users/${user._id.toString()}`)
+
+    const userInfo = response.body
+
+    const filteredBlogFromUser = userInfo.blogs.find(b => b.id === modifiedBlog.id)
+
+    expect(filteredBlogFromUser).toEqual(modifiedBlog)
   })
 
 })
