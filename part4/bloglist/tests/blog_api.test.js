@@ -12,9 +12,12 @@ describe('test endpoints, initially some notes saved', () => {
 
   // Changed from beforeEach to beforeAll, in the actual state there's
   // no problem, but if more tests are added it should be revised.
+  let token = undefined
+
   beforeAll(async () => {
     await User.deleteMany({})
     const uniqueUser = await helper.createUniqueUser()
+    token = helper.getToken(uniqueUser)
 
     await Blog.deleteMany({})
 
@@ -59,6 +62,7 @@ describe('test endpoints, initially some notes saved', () => {
     const blogsAtStart = await helper.blogsInDb()
 
     const createdBlog = await api.post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(helper.uniqueBlogPost)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -85,18 +89,24 @@ describe('test endpoints, initially some notes saved', () => {
 
     const savedBlog = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(helper.missingIdBlog)
       .expect(201)
 
     expect(savedBlog.body.likes).toBe(0)
   })
 
-  test('step5, if title and url are missing, 400 code is generated', async () => {
+  test('step5, if title and url are missing, 400 code and msg is generated', async () => {
 
-    await api
+    const response = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(helper.missingUrlAndTitleBlog)
       .expect(400)
+
+    expect(response.body.error).toBeDefined()
+    expect(response.body.error).toContain('`title` is required')
+    expect(response.body.error).toContain('`url` is required')
   })
 
   test('expansion stp5-1, fetching all blogs, one must contain information of its creator', async () => {
@@ -154,7 +164,7 @@ describe('test endpoints, initially some notes saved', () => {
     expect(blogTitles).toContain(helper.listWithTwoBlogs[1].title)
   })
 
-  test('expansion stp5-4, blog listed with user is the same as saved one', async () => {
+  test('expansion stp5-4, blog listed within userInfo is the same as saved one', async () => {
 
     const user = await User.findOne({ username: 'uniqueUser' })
     expect(user).toBeDefined()
@@ -186,14 +196,53 @@ describe('test endpoints, initially some notes saved', () => {
     expect(filteredBlogFromUser).toEqual(modifiedBlog)
   })
 
+  test('expansion stp7-1, post request without token generates error', async () => {
+    const user = User.findOne({})
+    expect(user).toBeDefined()
+
+    const response = await api
+      .post('/api/blogs')
+      .send(helper.uniqueBlogPost)
+      .expect(401)
+
+    expect(response.body).toEqual({ error: 'missing or invalid token' })
+  })
+
+  test('expansion stp7-2, user identified by the token is the creator of a blog', async () => {
+
+    const user = await User.findOne({
+      username: helper.userToLogin.username
+    })
+
+    expect(user).toBeDefined()
+
+    const newBlog = new Blog({
+      ...helper.uniqueBlogPost,
+      user: user._id
+    })
+
+    newBlog.save()
+
+    const response = await api
+      .get(`/api/blogs/${newBlog._id.toString()}`)
+      .expect(200)
+
+    const addedBlog = response.body
+    expect(addedBlog.user).toBeDefined()
+    expect(addedBlog.user.id).toBe(user._id.toString())
+  })
+
 })
 
 
 describe('expansion tests', () => {
 
+  let token = undefined
+
   beforeAll(async () => {
     await User.deleteMany({})
-    await helper.createUniqueUser()
+    const uniqueUser = await helper.createUniqueUser()
+    token = helper.getToken(uniqueUser)
   })
 
 
@@ -221,6 +270,7 @@ describe('expansion tests', () => {
 
     const updatedBlog = await api
       .put(`/api/blogs/${blog._id}`)
+      .set('Authorization', `Bearer ${token}`)
       .send(infoToUpdate)
       .expect(200)
 
@@ -350,7 +400,6 @@ describe('expansion tests', () => {
 
     const loginInfo = response.body
     expect(loginInfo.token).toBeDefined()
-    // eslint-disable-next-line no-undef
     const decodedToken = jwt.verify(loginInfo.token, process.env.SECRET)
 
     expect(decodedToken.username).toBe(helper.userToLogin.username)
