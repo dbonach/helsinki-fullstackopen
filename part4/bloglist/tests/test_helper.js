@@ -35,6 +35,11 @@ const missingUrlAndTitleBlog = {
   likes: 10,
 }
 
+const userToLogin = {
+  username: 'uniqueUser',
+  password: 'salainen'
+}
+
 const usersInDb = async () => {
   const users = await User.find({})
   return users.map(user => user.toJSON())
@@ -50,8 +55,7 @@ const createUniqueUser = async () => {
   const passwordHash = await bcrypt.hash('salainen', saltRounds)
 
   const newUser = new User({
-    username: 'uniqueUser',
-    name: 'testUser',
+    ...userToLogin,
     passwordHash
   })
 
@@ -66,5 +70,6 @@ module.exports = {
   missingUrlAndTitleBlog,
   usersInDb,
   createUniqueUser,
-  blogsInDb
+  blogsInDb,
+  userToLogin
 }

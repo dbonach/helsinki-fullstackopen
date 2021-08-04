@@ -5,6 +5,7 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const helper = require('./test_helper')
+const jwt = require('jsonwebtoken')
 require('express-async-errors')
 
 describe('test endpoints, initially some notes saved', () => {
@@ -150,6 +151,7 @@ describe('test endpoints, initially some notes saved', () => {
     expect(blogTitles).toContain(helper.listWithTwoBlogs[0].title)
     expect(blogTitles).toContain(helper.listWithTwoBlogs[1].title)
   })
+
 })
 
 
@@ -302,6 +304,22 @@ describe('expansion tests', () => {
 
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
+  test('expansion stp6, on login return token, username and name', async () => {
+
+    const response = await api
+      .post('/api/login')
+      .send(helper.userToLogin)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const loginInfo = response.body
+    expect(loginInfo.token).toBeDefined()
+    // eslint-disable-next-line no-undef
+    const decodedToken = jwt.verify(loginInfo.token, process.env.SECRET)
+
+    expect(decodedToken.username).toBe(helper.userToLogin.username)
   })
 })
 
