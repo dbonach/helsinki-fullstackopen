@@ -1,6 +1,8 @@
 const User = require('../models/user')
 const Blog = require('../models/blog')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
 const listWithTwoBlogs = [
   {
@@ -63,6 +65,22 @@ const createUniqueUser = async () => {
   return user
 }
 
+const getToken = (user) => {
+
+  const userForToken = {
+    username: user.username,
+    id: user._id
+  }
+
+  const token = jwt.sign(
+    userForToken,
+    process.env.SECRET,
+    { expiresIn: 60 * 60 }
+  )
+
+  return token
+}
+
 module.exports = {
   listWithTwoBlogs,
   uniqueBlogPost,
@@ -71,5 +89,6 @@ module.exports = {
   usersInDb,
   createUniqueUser,
   blogsInDb,
-  userToLogin
+  userToLogin,
+  getToken
 }
