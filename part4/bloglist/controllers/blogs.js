@@ -1,16 +1,17 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
+const userExtractor = require('../utils/middleware').userExtractor
 require('express-async-errors')
 
 
 blogRouter.get('/', async (request, response) => {
+
   const blogs = await Blog
     .find({}).populate('user', { username: 1, name: 1 })
 
   response.json(blogs)
 })
+
 
 blogRouter.get('/:id', async (request, response) => {
   const blog = await Blog
@@ -20,15 +21,16 @@ blogRouter.get('/:id', async (request, response) => {
   response.json(blog)
 })
 
-blogRouter.post('/', async (request, response) => {
+
+blogRouter.post('/', userExtractor, async (request, response) => {
+
   const body = request.body
 
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!request.token || !decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
+  if (!request.token || !request.user) {
+    return response.status(401).json({ error: 'missing or invalid token' })
   }
 
-  const user = await User.findById(decodedToken.id)
+  const user = request.user
 
   const blog = new Blog({
     title: body.title,
@@ -45,16 +47,18 @@ blogRouter.post('/', async (request, response) => {
   response.status(201).json(savedBlog)
 })
 
-blogRouter.delete('/:id', async (request, response) => {
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
-  if (!request.token || !decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
+blogRouter.delete('/:id', userExtractor, async (request, response) => {
+
+  if (!request.token || !request.user) {
+    return response.status(401).json({ error: 'missing or invalid token' })
   }
+
+  const user = request.user
 
   const blog = await Blog.findById(request.params.id)
 
-  if (blog.user.toString() !== decodedToken.id) {
+  if (blog.user.toString() !== user.id) {
     return response.status(403).json({
       error: 'You don\'t have permission to delete this data'
     })
@@ -62,10 +66,16 @@ blogRouter.delete('/:id', async (request, response) => {
 
   await Blog.findByIdAndRemove(request.params.id)
 
+  user.blogs = user.blogs.filter(ObjectId => ObjectId.toString() !== blog.id)
+
+  await user.save()
+
   response.status(204).end()
 })
 
+
 blogRouter.put('/:id', async (request, response) => {
+
   const body = request.body
 
   if (body.likes === undefined) {
@@ -81,5 +91,6 @@ blogRouter.put('/:id', async (request, response) => {
 
   response.json(updatedBlog)
 })
+
 
 module.exports = blogRouter
