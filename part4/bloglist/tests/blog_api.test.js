@@ -16,7 +16,7 @@ describe('test endpoints, initially some notes saved', () => {
 
   beforeAll(async () => {
     await User.deleteMany({})
-    const uniqueUser = await helper.createUniqueUser()
+    const uniqueUser = await helper.createUser(helper.userToLogin)
     token = helper.createToken(uniqueUser)
 
     await Blog.deleteMany({})
@@ -197,7 +197,7 @@ describe('test endpoints, initially some notes saved', () => {
   })
 
   test('expansion stp7-1, post request without token generates error', async () => {
-    const user = User.findOne({})
+    const user = await User.findOne({})
     expect(user).toBeDefined()
 
     const response = await api
@@ -221,13 +221,14 @@ describe('test endpoints, initially some notes saved', () => {
       user: user._id
     })
 
-    newBlog.save()
+    await newBlog.save()
 
     const response = await api
       .get(`/api/blogs/${newBlog._id.toString()}`)
       .expect(200)
 
     const addedBlog = response.body
+
     expect(addedBlog.user).toBeDefined()
     expect(addedBlog.user.id).toBe(user._id.toString())
   })
@@ -241,22 +242,8 @@ describe('expansion tests', () => {
 
   beforeAll(async () => {
     await User.deleteMany({})
-    const uniqueUser = await helper.createUniqueUser()
+    const uniqueUser = await helper.createUser(helper.userToLogin)
     token = helper.createToken(uniqueUser)
-  })
-
-
-  test('expansion stp1, delete request deletes a blog post', async () => {
-
-    const blog = new Blog(helper.uniqueBlogPost)
-    await blog.save()
-
-    await api
-      .delete(`/api/blogs/${blog._id}`)
-      .expect(204)
-
-    const response = await Blog.findById(blog._id)
-    expect(response).toBe(null)
   })
 
   test('expansion stp2, updates a blog likes property', async () => {
@@ -403,6 +390,68 @@ describe('expansion tests', () => {
     const decodedToken = jwt.verify(loginInfo.token, process.env.SECRET)
 
     expect(decodedToken.username).toBe(helper.userToLogin.username)
+  })
+
+  test('expansion stp9-1, delete request without token generates error', async () => {
+
+    const user = await User.findOne({ username: 'uniqueUser' })
+    expect(user).not.toBe(null)
+
+    const blog = new Blog({
+      ...helper.uniqueBlogPost,
+      user: user._id
+    })
+
+    await blog.save()
+
+    const response = await api
+      .delete(`/api/blogs/${blog._id}`)
+      .expect(401)
+
+    expect(response.body).toEqual({ error: 'missing or invalid token' })
+  })
+
+  test('expansion stp9-2, delete request with token is successful', async () => {
+
+    const user = await User.findOne({ username: 'uniqueUser' })
+    expect(user).not.toBe(null)
+
+    const blog = new Blog({
+      ...helper.uniqueBlogPost,
+      user: user._id
+    })
+
+    await blog.save()
+
+    await api
+      .delete(`/api/blogs/${blog._id.toString()}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(204)
+
+    const deletedBlog = await Blog.findById(blog._id.toString())
+    expect(deletedBlog).toBe(null)
+  })
+
+  test('expansion stp9-3, delete request with different token fails', async () => {
+
+    const user = await User.findOne({ username: helper.userToLogin.username })
+
+    const blog = new Blog({
+      ...helper.uniqueBlogPost,
+      user: user._id
+    })
+
+    const anotherUser = await helper.createUser({ username: 'password', password: 'password' })
+    const anotherUserToken = helper.createToken(anotherUser)
+
+    await blog.save()
+
+    const response = await api
+      .delete(`/api/blogs/${blog._id.toString()}`)
+      .set('Authorization', `Bearer ${anotherUserToken}`)
+      .expect(403)
+
+    expect(response.body).toEqual({ error: 'You don\'t have permission to delete this data' })
   })
 })
 
