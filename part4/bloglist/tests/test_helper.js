@@ -82,6 +82,12 @@ const createToken = (user) => {
   return token
 }
 
+const extractUser = async (token) => {
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+  const user = await User.findById(decodedToken.id)
+  return user
+}
+
 module.exports = {
   listWithTwoBlogs,
   uniqueBlogPost,
@@ -91,5 +97,6 @@ module.exports = {
   createUser,
   blogsInDb,
   userToLogin,
-  createToken
+  createToken,
+  extractUser
 }

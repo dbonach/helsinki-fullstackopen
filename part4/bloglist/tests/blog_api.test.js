@@ -29,9 +29,6 @@ describe('test endpoints, initially some notes saved', () => {
 
     const promiseArray = savedBlogs.map(blog => blog.save())
     await Promise.all(promiseArray)
-
-    // Or we could use this way to save the blogs
-    // await Blog.insertMany(helper.listWithTwoBlogs)
   })
 
   test('step1, return correct amount of blog posts in json', async () => {
@@ -234,6 +231,7 @@ describe('test endpoints, initially some notes saved', () => {
   })
 
 })
+
 
 
 describe('expansion tests', () => {
@@ -452,6 +450,30 @@ describe('expansion tests', () => {
       .expect(403)
 
     expect(response.body).toEqual({ error: 'You don\'t have permission to delete this data' })
+  })
+
+  test('expansion stp10, removed blogs should not be listed in user\'s blog', async () => {
+    const user = await helper.extractUser(token)
+
+    const blog = new Blog({
+      ...helper.uniqueBlogPost,
+      user: user._id
+    })
+
+    await blog.save()
+
+    user.blogs = user.blogs.concat(blog)
+    await user.save()
+
+    await api
+      .delete(`/api/blogs/${blog._id.toString()}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(204)
+
+    const userAfterDeletion = await helper.extractUser(token)
+    const userBlogs = userAfterDeletion.blogs.map(ObjectId => ObjectId.toString())
+    expect(userBlogs).not.toContain(blog.id)
+
   })
 })
 
