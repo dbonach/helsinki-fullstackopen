@@ -4,14 +4,6 @@ const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 require('express-async-errors')
 
-// const getTokenFrom = request => {
-//   const authorization = request.get('authorization')
-//   if (authorization && authorization.toLowerCase().startsWith('bearer')) {
-//     return authorization.substring(7)
-//   }
-//   return null
-// }
-
 
 blogRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -54,7 +46,22 @@ blogRouter.post('/', async (request, response) => {
 })
 
 blogRouter.delete('/:id', async (request, response) => {
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+  if (!request.token || !decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
+
+  const blog = await Blog.findById(request.params.id)
+
+  if (blog.user.toString() !== decodedToken.id) {
+    return response.status(403).json({
+      error: 'You don\'t have permission to delete this data'
+    })
+  }
+
   await Blog.findByIdAndRemove(request.params.id)
+
   response.status(204).end()
 })
 
