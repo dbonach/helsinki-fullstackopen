@@ -3,6 +3,7 @@ const Blog = require('../models/blog')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
+require('express-async-errors')
 
 const listWithTwoBlogs = [
   {
@@ -52,17 +53,17 @@ const blogsInDb = async () => {
   return blogs.map(blog => blog.toJSON())
 }
 
-const createUniqueUser = async () => {
+const createUser = async (user) => {
   const saltRounds = 10
-  const passwordHash = await bcrypt.hash('salainen', saltRounds)
+  const passwordHash = await bcrypt.hash(user.password, saltRounds)
 
   const newUser = new User({
-    ...userToLogin,
+    ...user,
     passwordHash
   })
 
-  const user = await newUser.save()
-  return user
+  const createdUser = await newUser.save()
+  return createdUser
 }
 
 const createToken = (user) => {
@@ -87,7 +88,7 @@ module.exports = {
   missingIdBlog,
   missingUrlAndTitleBlog,
   usersInDb,
-  createUniqueUser,
+  createUser,
   blogsInDb,
   userToLogin,
   createToken
