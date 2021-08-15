@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Blogs from './components/Blogs'
 import Login from './components/Login'
 import User from './components/User'
+import ErrorMessage from './components/ErrorMessage'
 import NewBlogPost from './components/NewBlogPost'
 import blogService from './services/blogs'
 
@@ -9,6 +10,7 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [loginData, setLoginData] = useState({ username: '', password: '' })
   const [user, setUser] = useState(null)
+  const [errorMessage, setErrorMessage] = useState({ msg: null, error: null })
 
 
   useEffect(() => {
@@ -33,6 +35,7 @@ const App = () => {
         loginData={loginData}
         setLoginData={setLoginData}
         setUser={setUser}
+        setErrorMessage={setErrorMessage}
       />
     )
   }
@@ -42,16 +45,32 @@ const App = () => {
       <div>
         <User name={user.username} setUser={setUser} />
         <Blogs blogs={blogs} />
-        <NewBlogPost setBlogs={setBlogs} blogs={blogs} />
+        <NewBlogPost
+          setErrorMessage={setErrorMessage}
+          setBlogs={setBlogs}
+          blogs={blogs}
+        />
       </div>
     )
   }
 
+  const errorMessageView = () => {
+    return errorMessage.msg ?
+      <ErrorMessage
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage} /> :
+      null
+  }
+
 
   return (
-    <div className='wrapper'>
-      {user ? loggedInView() : loggedOutView()}
-    </div>
+    <>
+      {errorMessageView()}
+
+      <div className='wrapper'>
+        {user ? loggedInView() : loggedOutView()}
+      </div>
+    </>
   )
 }
 
