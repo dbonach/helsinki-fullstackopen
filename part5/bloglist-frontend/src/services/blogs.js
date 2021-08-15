@@ -18,7 +18,6 @@ const create = async newBlogPost => {
   }
 
   const request = await axios.post(baseUrl, newBlogPost, config)
-  console.log(request.data);
   return request.data
 }
 
