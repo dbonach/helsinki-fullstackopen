@@ -1,6 +1,26 @@
 import React from 'react'
+import loginService from '../services/login'
+import blogService from '../services/blogs'
 
-const Login = ({ loginData, setLoginData, handleLogin }) => {
+const Login = ({ loginData, setLoginData, setUser }) => {
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+
+    try {
+      const user = await loginService.login(loginData)
+
+      window.localStorage.setItem(
+        'loggedBlogAppUser', JSON.stringify(user)
+      )
+
+      blogService.setToken(user.token)
+      setUser(user)
+      setLoginData({ username: '', password: '' })
+    } catch (exception) {
+      console.error('Error: ', exception)
+    }
+  }
 
   const formStyle = {
     margin: 'auto',
@@ -65,7 +85,7 @@ const Login = ({ loginData, setLoginData, handleLogin }) => {
           />
         </div>
 
-        <button style={buttonStyle}>Login</button>
+        <button type="submit" style={buttonStyle}>Login</button>
 
       </form>
 
