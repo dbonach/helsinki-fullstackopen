@@ -16,16 +16,27 @@ const App = () => {
     )
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+    }
+  }, [])
+
 
   const handleLogin = async (e) => {
     e.preventDefault()
 
     try {
       const user = await loginService.login(loginData)
-      if (user) {
-        setUser(user)
-        setLoginData({ username: '', password: '' })
-      }
+
+      window.localStorage.setItem(
+        'loggedBlogAppUser', JSON.stringify(user)
+      )
+
+      setUser(user)
+      setLoginData({ username: '', password: '' })
     } catch (exception) {
       console.error('Error: ', exception)
     }
