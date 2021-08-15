@@ -2,14 +2,47 @@ import React from 'react'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
 
-const Login = ({ loginData, setLoginData, setUser }) => {
+
+const formStyle = {
+  margin: 'auto',
+  width: 'fit-content',
+  padding: '1rem 1.5rem',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  border: '1px solid #ccc',
+  borderRadius: '.5rem'
+}
+
+const formFieldStyle = {
+  marginBottom: '.25rem',
+}
+
+const labelStyle = {
+  display: 'inline-block',
+  minWidth: '5rem',
+}
+
+const buttonStyle = {
+  marginTop: '1rem',
+  margin: '1rem auto 0 auto',
+}
+
+const centerEverything = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  height: '60vh'
+}
+
+
+const Login = ({ loginData, setLoginData, setUser, setErrorMessage }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault()
 
     try {
       const user = await loginService.login(loginData)
-
       window.localStorage.setItem(
         'loggedBlogAppUser', JSON.stringify(user)
       )
@@ -17,41 +50,16 @@ const Login = ({ loginData, setLoginData, setUser }) => {
       blogService.setToken(user.token)
       setUser(user)
       setLoginData({ username: '', password: '' })
+
     } catch (exception) {
+
+      setErrorMessage({ msg: 'Wrong username or password', error: true })
+      setTimeout(() => {
+        setErrorMessage({ msg: null, error: null })
+      }, 3000)
+
       console.error('Error: ', exception)
     }
-  }
-
-  const formStyle = {
-    margin: 'auto',
-    width: 'fit-content',
-    padding: '1rem 1.5rem',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    border: '1px solid #ccc',
-    borderRadius: '.5rem'
-  }
-
-  const formFieldStyle = {
-    marginBottom: '.25rem',
-  }
-
-  const labelStyle = {
-    display: 'inline-block',
-    minWidth: '5rem',
-  }
-
-  const buttonStyle = {
-    marginTop: '1rem',
-    margin: '1rem auto 0 auto',
-  }
-
-  const centerEverything = {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    height: '60vh'
   }
 
   return (
