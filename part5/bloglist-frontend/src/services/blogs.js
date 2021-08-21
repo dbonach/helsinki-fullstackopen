@@ -21,17 +21,33 @@ const create = async newBlogPost => {
   return request.data
 }
 
-const update = async (id, updatedLike) => {
+const update = async (blog) => {
   const config = {
     headers: { Authorization: token },
   }
 
-  const uniqueBlog = `${baseUrl}/${id}`
+  const uniqueBlog = `${baseUrl}/${blog.id}`
+
+  const updatedLike = { likes: blog.likes + 1 }
 
   const request = await axios.put(uniqueBlog, updatedLike, config)
   return request.data
 }
 
-const functions = { getAll, create, update, setToken }
+const remove = async (id) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+
+  const uniqueUrl = `${baseUrl}/${id}`
+
+  try {
+    await axios.delete(uniqueUrl, config)
+  } catch (error) {
+    return error.response.data
+  }
+}
+
+const functions = { getAll, create, update, remove, setToken }
 
 export default functions

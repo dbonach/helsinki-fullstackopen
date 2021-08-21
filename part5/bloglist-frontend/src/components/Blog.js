@@ -23,8 +23,14 @@ const likeButtonStyle = {
   lineHeight: '.75rem'
 }
 
+const removeButtonStyle = {
+  alignSelf: 'flex-start',
+  marginTop: '1rem',
+  lineHeight: '.75rem'
+}
 
-const Blog = ({ blog, updateLikes }) => {
+
+const Blog = ({ blog, updateLikes, removeBlog, user }) => {
   const [visible, setVisible] = useState(false)
 
   const modifiedFullInfoStyle = {
@@ -42,11 +48,19 @@ const Blog = ({ blog, updateLikes }) => {
     setVisible(!visible)
   }
 
+  const renderButton = () => {
+    return (
+      <button
+        style={removeButtonStyle}
+        onClick={() => removeBlog(blog)}>remove</button>
+    )
+  }
+
   return (
     <>
       <div style={modifiedPreviewInfoStyle}>
         <span>{blog.title} {blog.author}</span>
-        <button onClick={toggleVisibility}>view</button>
+        <button onClick={toggleVisibility} >view</button>
       </div>
 
       <div style={modifiedFullInfoStyle}>
@@ -55,9 +69,10 @@ const Blog = ({ blog, updateLikes }) => {
           {blog.likes}
           <button
             onClick={() => updateLikes(blog)}
-            style={likeButtonStyle}>like</button>
+            style={likeButtonStyle} >like</button>
         </span>
         <span>{blog.user.name}</span>
+        {blog.user.username === user.username ? renderButton() : null}
       </div>
     </>
   )

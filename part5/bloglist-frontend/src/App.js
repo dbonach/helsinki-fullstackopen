@@ -36,8 +36,7 @@ const App = () => {
         loginData={loginData}
         setLoginData={setLoginData}
         setUser={setUser}
-        setErrorMessage={setErrorMessage}
-      />
+        setErrorMessage={setErrorMessage} />
     )
   }
 
@@ -45,14 +44,17 @@ const App = () => {
     return (
       <div>
         <User name={user.username} setUser={setUser} />
-        <Blogs blogs={blogs} setBlogs={setBlogs} />
+        <Blogs
+          blogs={blogs}
+          setBlogs={setBlogs}
+          setErrorMessage={setErrorMessage}
+          user={user} />
         <Toggleable buttonLabel='New blog post' ref={blogFormRef}>
           <NewBlogPost
             setErrorMessage={setErrorMessage}
             setBlogs={setBlogs}
             blogs={blogs}
-            blogFormRef={blogFormRef}
-          />
+            blogFormRef={blogFormRef} />
         </Toggleable>
       </div>
     )
