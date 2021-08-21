@@ -1,6 +1,28 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
+
+const formFieldStyle = {
+  marginBottom: '.25rem',
+}
+
+const formStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  marginTop: '2rem'
+}
+
+const labelStyle = {
+  display: 'inline-block',
+  width: '3.5rem',
+}
+
+const buttonStyle = {
+  alignSelf: 'flex-start',
+  marginTop: '1.5rem'
+}
+
+
 const NewBlogPost = ({ setErrorMessage, setBlogs, blogs, blogFormRef }) => {
   const [blogPost, setBlogPost] = useState({ title: '', author: '', url: '' })
 
@@ -10,7 +32,6 @@ const NewBlogPost = ({ setErrorMessage, setBlogs, blogs, blogFormRef }) => {
     try {
       const response = await blogService.create(blogPost)
       setBlogPost({ title: '', author: '', url: '' })
-
       setBlogs(blogs.concat([response]))
 
       setErrorMessage({
@@ -23,6 +44,7 @@ const NewBlogPost = ({ setErrorMessage, setBlogs, blogs, blogFormRef }) => {
       }, 3000)
 
       blogFormRef.current.toggleVisibility()
+
     } catch (exception) {
 
       setErrorMessage({ msg: 'Failed to create a new blog post', error: true })
@@ -35,25 +57,6 @@ const NewBlogPost = ({ setErrorMessage, setBlogs, blogs, blogFormRef }) => {
 
   }
 
-  const formFieldStyle = {
-    marginBottom: '.25rem',
-  }
-
-  const formStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    marginTop: '2rem'
-  }
-
-  const labelStyle = {
-    display: 'inline-block',
-    width: '3.5rem',
-  }
-
-  const buttonStyle = {
-    alignSelf: 'flex-start',
-    marginTop: '1.5rem'
-  }
 
   return (
     <form onSubmit={handleNewBlogPost} style={formStyle}>
