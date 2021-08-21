@@ -12,7 +12,7 @@ const App = () => {
   const [loginData, setLoginData] = useState({ username: '', password: '' })
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState({ msg: null, error: null })
-  const blogFromRef = useRef()
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -46,12 +46,12 @@ const App = () => {
       <div>
         <User name={user.username} setUser={setUser} />
         <Blogs blogs={blogs} />
-        <Toggleable buttonLabel='New blog post' ref={blogFromRef}>
+        <Toggleable buttonLabel='New blog post' ref={blogFormRef}>
           <NewBlogPost
             setErrorMessage={setErrorMessage}
             setBlogs={setBlogs}
             blogs={blogs}
-            blogFromRef={blogFromRef}
+            blogFormRef={blogFormRef}
           />
         </Toggleable>
       </div>
