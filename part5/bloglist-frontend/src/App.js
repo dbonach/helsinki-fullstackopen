@@ -45,7 +45,7 @@ const App = () => {
     return (
       <div>
         <User name={user.username} setUser={setUser} />
-        <Blogs blogs={blogs} />
+        <Blogs blogs={blogs} setBlogs={setBlogs} />
         <Toggleable buttonLabel='New blog post' ref={blogFormRef}>
           <NewBlogPost
             setErrorMessage={setErrorMessage}

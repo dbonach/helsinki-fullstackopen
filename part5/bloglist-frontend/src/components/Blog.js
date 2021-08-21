@@ -24,7 +24,7 @@ const likeButtonStyle = {
 }
 
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateLikes }) => {
   const [visible, setVisible] = useState(false)
 
   const modifiedFullInfoStyle = {
@@ -53,7 +53,9 @@ const Blog = ({ blog }) => {
         <span>{blog.url}</span>
         <span>
           {blog.likes}
-          <button style={likeButtonStyle}>like</button>
+          <button
+            onClick={() => updateLikes(blog)}
+            style={likeButtonStyle}>like</button>
         </span>
         <span>{blog.user.name}</span>
       </div>

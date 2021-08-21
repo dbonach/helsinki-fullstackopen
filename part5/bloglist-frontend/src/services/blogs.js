@@ -21,6 +21,17 @@ const create = async newBlogPost => {
   return request.data
 }
 
-const functions = { getAll, create, setToken }
+const update = async (id, updatedLike) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+
+  const uniqueBlog = `${baseUrl}/${id}`
+
+  const request = await axios.put(uniqueBlog, updatedLike, config)
+  return request.data
+}
+
+const functions = { getAll, create, update, setToken }
 
 export default functions
