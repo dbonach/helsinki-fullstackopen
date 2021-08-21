@@ -22,10 +22,12 @@ const Blogs = ({ blogs, setBlogs }) => {
     setBlogs(updatedBlogArray)
   }
 
+  const sortedBlogs = blogs.slice().sort((a, b) => b.likes - a.likes)
+
   return (
     <div>
       <h2 style={{ textAlign: 'center' }}>Blogs</h2>
-      {blogs.map(blog =>
+      {sortedBlogs.map(blog =>
         <Blog key={blog.id} blog={blog} updateLikes={updateLikes} />
       )}
     </div>
