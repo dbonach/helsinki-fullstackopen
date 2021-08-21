@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blogs from './components/Blogs'
 import Login from './components/Login'
 import User from './components/User'
+import Toggleable from './components/Toggeable'
 import ErrorMessage from './components/ErrorMessage'
 import NewBlogPost from './components/NewBlogPost'
 import blogService from './services/blogs'
@@ -11,7 +12,7 @@ const App = () => {
   const [loginData, setLoginData] = useState({ username: '', password: '' })
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState({ msg: null, error: null })
-
+  const blogFromRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -45,11 +46,14 @@ const App = () => {
       <div>
         <User name={user.username} setUser={setUser} />
         <Blogs blogs={blogs} />
-        <NewBlogPost
-          setErrorMessage={setErrorMessage}
-          setBlogs={setBlogs}
-          blogs={blogs}
-        />
+        <Toggleable buttonLabel='New blog post' ref={blogFromRef}>
+          <NewBlogPost
+            setErrorMessage={setErrorMessage}
+            setBlogs={setBlogs}
+            blogs={blogs}
+            blogFromRef={blogFromRef}
+          />
+        </Toggleable>
       </div>
     )
   }

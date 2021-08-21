@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const NewBlogPost = ({ setErrorMessage, setBlogs, blogs }) => {
+const NewBlogPost = ({ setErrorMessage, setBlogs, blogs, blogFromRef }) => {
   const [blogPost, setBlogPost] = useState({ title: '', author: '', url: '' })
 
   const handleNewBlogPost = async (e) => {
@@ -10,16 +10,19 @@ const NewBlogPost = ({ setErrorMessage, setBlogs, blogs }) => {
     try {
       const response = await blogService.create(blogPost)
       setBlogPost({ title: '', author: '', url: '' })
+
       setBlogs(blogs.concat([response]))
 
       setErrorMessage({
         msg: `Blog post '${response.title}' successfully created`,
         error: false
       })
+
       setTimeout(() => {
         setErrorMessage({ msg: null, error: null })
       }, 3000)
 
+      blogFromRef.current.toggleVisibility()
     } catch (exception) {
 
       setErrorMessage({ msg: 'Failed to create a new blog post', error: true })
