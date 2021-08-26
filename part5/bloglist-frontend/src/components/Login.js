@@ -1,6 +1,7 @@
 import React from 'react'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 
 const formStyle = {
@@ -99,6 +100,13 @@ const Login = ({ loginData, setLoginData, setUser, setErrorMessage }) => {
 
     </div>
   )
+}
+
+Login.propTypes = {
+  loginData: PropTypes.object.isRequired,
+  setLoginData: PropTypes.func.isRequired,
+  setUser: PropTypes.func.isRequired,
+  setErrorMessage: PropTypes.func.isRequired
 }
 
 export default Login
