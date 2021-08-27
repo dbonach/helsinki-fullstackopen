@@ -30,7 +30,7 @@ const ErrorMessage = ({ errorMessage, setErrorMessage }) => {
     { ...messageBoxStyle, ...errorColor } :
     { ...messageBoxStyle, ...successColor }
 
-  const removeMessage = (e) => {
+  const removeMessage = () => {
     setErrorMessage({ msg: null, error: null })
   }
 
