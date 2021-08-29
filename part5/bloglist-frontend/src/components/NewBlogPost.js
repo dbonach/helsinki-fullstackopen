@@ -23,6 +23,7 @@ const NewBlogPost = ({ setErrorMessage, setBlogs, blogs, blogFormRef, user }) =>
       blogFormRef.current.toggleVisibility()
 
     } catch (exception) {
+
       const msg = exception.response.data.error || 'Failed to create a new blog post'
       setErrorMessage({ msg: msg, error: true })
       setTimeout(() => {

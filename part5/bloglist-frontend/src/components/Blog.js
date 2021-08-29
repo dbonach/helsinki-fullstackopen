@@ -15,7 +15,8 @@ const fullInfoStyle = {
   border: '1px solid #ddd',
   borderRadius: '.25rem',
   padding: '.5rem',
-  overflowWrap: 'anywhere'
+  overflowWrap: 'anywhere',
+  display: 'flex'
 }
 
 const likeButtonStyle = {
@@ -32,11 +33,6 @@ const removeButtonStyle = {
 
 const Blog = ({ blog, updateLikes, removeBlog, user }) => {
   const [visible, setVisible] = useState(false)
-
-  const modifiedFullInfoStyle = {
-    ...fullInfoStyle,
-    display: visible ? 'flex' : 'none'
-  }
 
   const modifiedPreviewInfoStyle = {
     ...previewInfoStyle,
@@ -58,7 +54,7 @@ const Blog = ({ blog, updateLikes, removeBlog, user }) => {
 
   const fullView = () => {
     return (
-      <div style={modifiedFullInfoStyle}>
+      <div style={fullInfoStyle}>
         <span>{blog.url}</span>
         <span>
           {blog.likes}

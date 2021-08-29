@@ -28,9 +28,12 @@ const Blogs = ({ blogs, setBlogs, setErrorMessage, user }) => {
         await blogService.remove(blog.id)
         const keepBlogs = blogs.filter(item => item.id !== blog.id)
         setBlogs(keepBlogs)
+
       } catch (exception) {
+
+        const msg = exception.response.data.error || 'Failed to remove the blog post'
         setErrorMessage({
-          msg: 'Failed to remove the blog post',
+          msg: msg,
           error: true
         })
 
