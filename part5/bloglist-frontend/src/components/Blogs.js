@@ -22,18 +22,23 @@ const Blogs = ({ blogs, setBlogs, setErrorMessage, user }) => {
   }
 
   const removeBlog = async (blog) => {
-    if (window.confirm(`Remove blog "${blog.title}"?`)) {
-      const response = await blogService.remove(blog.id)
 
-      if (response.error) {
+    if (window.confirm(`Remove blog "${blog.title}"?`)) {
+      try {
+        await blogService.remove(blog.id)
+        const keepBlogs = blogs.filter(item => item.id !== blog.id)
+        setBlogs(keepBlogs)
+      } catch (exception) {
         setErrorMessage({
-          msg: `Error: '${response.error}'`,
+          msg: 'Failed to remove the blog post',
           error: true
         })
 
         setTimeout(() => {
           setErrorMessage({ msg: null, error: null })
         }, 3000)
+
+        console.error('Error: ', exception)
       }
     }
   }

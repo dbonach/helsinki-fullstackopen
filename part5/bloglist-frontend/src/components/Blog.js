@@ -56,13 +56,8 @@ const Blog = ({ blog, updateLikes, removeBlog, user }) => {
     )
   }
 
-  return (
-    <>
-      <div style={modifiedPreviewInfoStyle}>
-        <span>{blog.title} {blog.author}</span>
-        <button onClick={toggleVisibility} >view</button>
-      </div>
-
+  const fullView = () => {
+    return (
       <div style={modifiedFullInfoStyle}>
         <span>{blog.url}</span>
         <span>
@@ -74,6 +69,17 @@ const Blog = ({ blog, updateLikes, removeBlog, user }) => {
         <span>{blog.user.name}</span>
         {blog.user.username === user.username ? renderButton() : null}
       </div>
+    )
+  }
+
+  return (
+    <>
+      <div style={modifiedPreviewInfoStyle}>
+        <span>{blog.title} {blog.author}</span>
+        <button onClick={toggleVisibility} >view</button>
+      </div>
+
+      {visible ? fullView() : null}
     </>
   )
 }

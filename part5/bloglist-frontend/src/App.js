@@ -54,7 +54,8 @@ const App = () => {
             setErrorMessage={setErrorMessage}
             setBlogs={setBlogs}
             blogs={blogs}
-            blogFormRef={blogFormRef} />
+            blogFormRef={blogFormRef}
+            user={user} />
         </Toggleable>
       </div>
     )

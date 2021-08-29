@@ -53,8 +53,8 @@ const Login = ({ loginData, setLoginData, setUser, setErrorMessage }) => {
       setLoginData({ username: '', password: '' })
 
     } catch (exception) {
-
-      setErrorMessage({ msg: 'Wrong username or password', error: true })
+      const msg = exception.response.data.error || 'Wrong username or password'
+      setErrorMessage({ msg: msg, error: true })
       setTimeout(() => {
         setErrorMessage({ msg: null, error: null })
       }, 3000)
